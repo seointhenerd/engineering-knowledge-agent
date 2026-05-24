@@ -2,8 +2,7 @@
 
 A RAG-powered AI agent that answers questions about your engineering documents — datasheets, research papers, technical specs — and searches the web when it needs to. Built with Python, FastAPI, ChromaDB, and the Anthropic API.
 
-![Chat UI](docs/ss-2.png)
-> *Replace this with an actual screenshot of your running app*
+![Chat UI](images/ss-2.png)
 
 ---
 
@@ -159,15 +158,6 @@ python3 query.py "What is the max voltage rating?"
 - FastAPI basics: routing, request/response models, serving static files
 - CSS flexbox debugging (user bubble alignment — wrapper width collapse is a real gotcha)
 - Importance of observability even in small projects: logging latency and tool usage makes debugging dramatically easier
-
----
-
-## What's Next
-
-- [ ] Streaming responses (no more waiting for the full answer)
-- [ ] Multi-turn conversation memory
-- [ ] Document upload via the UI (drag and drop)
-- [ ] Deployable via Docker
 
 ---
 
