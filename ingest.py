@@ -72,8 +72,41 @@ def ingest(target_path: str) -> None:
     console.print(f"\n[green]Done.[/green] Ingested [bold]{total_chunks}[/bold] chunks from [bold]{len(files)}[/bold] file(s) into '{COLLECTION_NAME}'.")
 
 
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        console.print("Usage: python ingest.py <file_or_folder>")
+def remove_document(filename: str) -> None:
+    client = chromadb.PersistentClient(path=".chroma")
+    try:
+        collection = client.get_collection(COLLECTION_NAME)
+    except Exception:
+        console.print(f"[red]Collection '{COLLECTION_NAME}' not found.[/red]")
         sys.exit(1)
-    ingest(sys.argv[1])
+
+    collection.delete(where={"filename": filename})
+    console.print(f"[green]Removed[/green] all chunks for '[bold]{filename}[/bold]'.")
+
+
+def reset() -> None:
+    client = chromadb.PersistentClient(path=".chroma")
+    try:
+        client.delete_collection(COLLECTION_NAME)
+        console.print(f"[green]Reset complete.[/green] Collection '{COLLECTION_NAME}' deleted.")
+    except Exception:
+        console.print("[yellow]Collection not found — nothing to reset.[/yellow]")
+
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        console.print("Usage:")
+        console.print("  python ingest.py <file_or_folder>       — ingest documents")
+        console.print("  python ingest.py --remove <filename>    — remove one document")
+        console.print("  python ingest.py --reset                — wipe entire collection")
+        sys.exit(1)
+
+    if sys.argv[1] == "--reset":
+        reset()
+    elif sys.argv[1] == "--remove":
+        if len(sys.argv) != 3:
+            console.print("Usage: python ingest.py --remove <filename>")
+            sys.exit(1)
+        remove_document(sys.argv[2])
+    else:
+        ingest(sys.argv[1])
