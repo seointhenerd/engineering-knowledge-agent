@@ -248,9 +248,77 @@
     #chat::-webkit-scrollbar { width: 4px; }
     #chat::-webkit-scrollbar-track { background: transparent; }
     #chat::-webkit-scrollbar-thumb { background: #2d3748; border-radius: 2px; }
+
+    #lock-screen {
+      position: fixed;
+      inset: 0;
+      background: #0f1117;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
+    }
+
+    #lock-box {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      width: 300px;
+    }
+
+    #lock-box label {
+      font-size: 12px;
+      color: #64748b;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    #lock-password {
+      background: #1a1f2e;
+      border: 1px solid #2d3748;
+      border-radius: 8px;
+      color: #e2e8f0;
+      font-family: inherit;
+      font-size: 14px;
+      padding: 10px 14px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    #lock-password:focus { border-color: #22d3a5; }
+
+    #lock-submit {
+      background: #22d3a5;
+      color: #0f1117;
+      border: none;
+      border-radius: 8px;
+      padding: 10px;
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.15s;
+    }
+
+    #lock-submit:hover { opacity: 0.85; }
+
+    #lock-error {
+      font-size: 12px;
+      color: #f87171;
+      min-height: 16px;
+    }
   </style>
 </head>
 <body>
+
+<div id="lock-screen">
+  <div id="lock-box">
+    <label>Password</label>
+    <input id="lock-password" type="password" placeholder="Enter password…" />
+    <button id="lock-submit">Enter</button>
+    <span id="lock-error"></span>
+  </div>
+</div>
 
 <header>
   <div class="dot"></div>
@@ -266,6 +334,39 @@
 </div>
 
 <script>
+  // ── Password gate ────────────────────────────────────────────────────────
+  const lockScreen = document.getElementById('lock-screen');
+  const lockInput = document.getElementById('lock-password');
+  const lockSubmit = document.getElementById('lock-submit');
+  const lockError = document.getElementById('lock-error');
+
+  if (sessionStorage.getItem('authed')) {
+    lockScreen.remove();
+  }
+
+  async function tryUnlock() {
+    const pw = lockInput.value;
+    lockError.textContent = '';
+    const res = await fetch('/auth', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ password: pw }),
+    });
+    const data = await res.json();
+    if (data.ok) {
+      sessionStorage.setItem('authed', '1');
+      lockScreen.remove();
+    } else {
+      lockError.textContent = 'Wrong password.';
+      lockInput.value = '';
+      lockInput.focus();
+    }
+  }
+
+  lockSubmit.addEventListener('click', tryUnlock);
+  lockInput.addEventListener('keydown', e => { if (e.key === 'Enter') tryUnlock(); });
+
+  // ── Chat ──────────────────────────────────────────────────────────────────
   const chat = document.getElementById('chat');
   const input = document.getElementById('question');
   const sendBtn = document.getElementById('send');

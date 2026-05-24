@@ -1,6 +1,7 @@
 """FastAPI backend for the engineering knowledge agent."""
 
 import logging
+import os
 import time
 from datetime import datetime
 from pathlib import Path
@@ -23,6 +24,10 @@ app = FastAPI(title="Engineering Knowledge Agent")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
+class AuthRequest(BaseModel):
+    password: str
+
+
 class ChatRequest(BaseModel):
     question: str
 
@@ -40,6 +45,14 @@ def serve_ui():
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.post("/auth")
+def auth(req: AuthRequest):
+    expected = os.getenv("APP_PASSWORD")
+    if not expected:
+        return {"ok": True}  # no password set → open access
+    return {"ok": req.password == expected}
 
 
 @app.get("/documents")
