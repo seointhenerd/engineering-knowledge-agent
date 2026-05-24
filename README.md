@@ -158,9 +158,3 @@ python3 query.py "What is the max voltage rating?"
 - FastAPI basics: routing, request/response models, serving static files
 - CSS flexbox debugging (user bubble alignment — wrapper width collapse is a real gotcha)
 - Importance of observability even in small projects: logging latency and tool usage makes debugging dramatically easier
-
----
-
-## License
-
-MIT
