@@ -1,8 +1,17 @@
 # 🤖 Personal Engineering Knowledge Agent
 
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Railway-6366f1?style=for-the-badge&logo=railway&logoColor=white)](https://engineering-knowledge-agent.up.railway.app/)
+[![Deployed on Railway](https://img.shields.io/badge/Deployed%20on-Railway-0B0D0E?style=for-the-badge&logo=railway&logoColor=white)](https://railway.app)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+
 A RAG-powered AI agent that answers questions about your engineering documents — datasheets, research papers, technical specs — and searches the web when it needs to. Built with Python, FastAPI, ChromaDB, and the Anthropic API.
 
-![Chat UI](images/ss-2.png)
+🔗 **[Try the live demo](https://engineering-knowledge-agent.up.railway.app/)** — password available upon request
+
+![Chat UI](images/ss-4.png)
+![Chat UI](images/ss-5.png)
+![Chat UI](images/ss-6.png)
 
 ---
 
@@ -76,7 +85,7 @@ knowledge-agent/
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/seointhenerd/knowledge-agent.git
+git clone https://github.com/yourusername/knowledge-agent.git
 cd knowledge-agent
 pip3 install -r requirements.txt
 ```
@@ -88,6 +97,7 @@ Create a `.env` file in the project root:
 ```
 ANTHROPIC_API_KEY=your_anthropic_api_key
 TAVILY_API_KEY=your_tavily_api_key
+APP_PASSWORD=your_app_password
 ```
 
 - Get your Anthropic API key at [console.anthropic.com](https://console.anthropic.com)
