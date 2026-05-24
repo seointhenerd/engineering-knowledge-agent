@@ -5,9 +5,10 @@ import time
 from datetime import datetime
 from pathlib import Path
 
+import chromadb
 from dotenv import load_dotenv
 from fastapi import FastAPI
-from fastapi.responses import FileResponse, JSONResponse
+from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
@@ -39,6 +40,21 @@ def serve_ui():
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/documents")
+def list_documents():
+    chroma_path = Path(".chroma")
+    if not chroma_path.exists():
+        return {"documents": []}
+    try:
+        client = chromadb.PersistentClient(path=str(chroma_path))
+        collection = client.get_collection("engineering_docs")
+        results = collection.get(include=["metadatas"])
+        filenames = sorted({m["filename"] for m in results["metadatas"] if "filename" in m})
+        return {"documents": filenames}
+    except Exception:
+        return {"documents": []}
 
 
 @app.post("/chat", response_model=ChatResponse)
